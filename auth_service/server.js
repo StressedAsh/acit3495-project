@@ -14,26 +14,25 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// 🔹 Serve static files from the `views` directory
+// 🔹 Serve static files (login/register pages)
 app.use(express.static(path.join(__dirname, "views")));
 
-// 🔹 Define root route to serve `index.html`
+// 🔹 Serve index.html at root
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "index.html"));
 });
 
-// 🔹 Serve login page
+// 🔹 Serve login and register pages
 app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "login.html"));
 });
 
-// 🔹 Serve register page
 app.get("/register", (req, res) => {
   res.sendFile(path.join(__dirname, "views", "register.html"));
 });
 
 // 🔹 API Routes
-app.use("/auth", authRoutes);
+app.use("/", authRoutes); // ✅ Fix to make `/auth/register` and `/auth/login` work properly
 
 app.listen(PORT, () => {
   console.log(`Authentication Service running on port ${PORT}`);

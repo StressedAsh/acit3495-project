@@ -1,2 +1,6 @@
-flask
-pymysql
+Flask
+PyMySQL
+mysql-connector-python
+python-dotenv
+jwt
+PyJWT
