@@ -11,7 +11,7 @@
   </head>
   <body>
     <nav>
-      <h2>Data Service</h2>
+      <h1>Data Service</h1>
       <div class="nav-links">
         <a href="/">Home</a>
         <button onclick="logout()">Logout</button>
@@ -27,9 +27,9 @@
           credentials: "include",
         })
           .then((response) => {
-            window.location.href = "http://localhost:5001/login"; // ✅ Redirect to login
+            window.location.href = "http://localhost:5001/login";
             setTimeout(() => {
-              window.location.reload(true); // ✅ Force reload to clear cache
+              window.location.reload(true);
             }, 500);
           })
           .catch((error) => console.error("Logout failed", error));
