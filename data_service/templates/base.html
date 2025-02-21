@@ -10,13 +10,30 @@
     />
   </head>
   <body>
-    <header>
-      <h1>Data Service</h1>
-      <nav>
-        <a href="/">Home</a> |
-        <a href="{{ url_for('data_form') }}">Enter Data</a>
-      </nav>
-    </header>
+    <nav>
+      <h2>Data Service</h2>
+      <div class="nav-links">
+        <a href="/">Home</a>
+        <button onclick="logout()">Logout</button>
+      </div>
+    </nav>
+
     <main>{% block content %}{% endblock %}</main>
+
+    <script>
+      function logout() {
+        fetch("http://localhost:5001/auth/logout", {
+          method: "GET",
+          credentials: "include",
+        })
+          .then((response) => {
+            window.location.href = "http://localhost:5001/login"; // ✅ Redirect to login
+            setTimeout(() => {
+              window.location.reload(true); // ✅ Force reload to clear cache
+            }, 500);
+          })
+          .catch((error) => console.error("Logout failed", error));
+      }
+    </script>
   </body>
 </html>

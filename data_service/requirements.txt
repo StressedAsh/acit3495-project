@@ -2,5 +2,4 @@ Flask
 PyMySQL
 mysql-connector-python
 python-dotenv
-jwt
-PyJWT
+PyJWT>=2.0.0

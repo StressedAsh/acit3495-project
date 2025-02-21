@@ -1,6 +1,7 @@
-from flask import Flask, request, render_template, redirect, url_for, jsonify
+from flask import Flask, request, render_template, redirect, jsonify
 import jwt
-import os
+import time
+from jwt.exceptions import DecodeError, ExpiredSignatureError  # ✅ Import correct exceptions
 from database.db import get_db_connection
 from config import Config
 
@@ -13,11 +14,20 @@ def authenticate(f):
         token = request.cookies.get("auth_token")
         if not token:
             return redirect("http://localhost:5001/login")  # Redirect to auth_service login
+        
         try:
-            jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
-        except jwt.ExpiredSignatureError:
+            decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"], options={"verify_exp": False})
+            exp = decoded_token.get("exp", 0)
+            current_time = int(time.time())
+
+            if current_time > exp:  # Token is expired
+                return redirect("http://localhost:5001/login")
+
+        except (DecodeError, ExpiredSignatureError):  # ✅ Catch both decode and expiration errors
             return redirect("http://localhost:5001/login")
+
         return f(*args, **kwargs)
+
     wrapper.__name__ = f.__name__
     return wrapper
 
