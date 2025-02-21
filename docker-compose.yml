@@ -18,6 +18,7 @@ services:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       interval: 10s
       retries: 5
+
   mongo:
     image: mongo:latest
     container_name: mongo_db
@@ -56,39 +57,12 @@ services:
     depends_on:
       - mysql
       - auth_service
+      - mongo
     environment:
       - DB_HOST=mysql
       - DB_USER=user
       - DB_PASSWORD=password
       - DB_NAME=data_collection
-
-  analytics_service:
-    build: ./analytics_service
-    container_name: analytics_service
-    restart: always
-    ports:
-      - "5003:5003"
-    depends_on:
-      - mysql
-      - mongo
-    environment:
-      - MYSQL_HOST=mysql
-      - MYSQL_USER=user
-      - MYSQL_PASSWORD=password
-      - MYSQL_DB=data_collection
-      - MONGO_HOST=mongodb
-      - MONGO_DB=analytics_results
-
-  results_service:
-    build: ./results_service
-    container_name: results_service
-    restart: always
-    ports:
-      - "3000:3000"
-    depends_on:
-      mongo:
-        condition: service_healthy
-    environment:
       - MONGO_HOST=mongo
       - MONGO_DB=analytics_results
 

@@ -18,4 +18,25 @@ content %}
 
   <button type="submit">Save</button>
 </form>
+
+<hr />
+<h2>Previous Entries</h2>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Age</th>
+    <th>Wage</th>
+  </tr>
+  {% for entry in entries %}
+  <tr>
+    <td>{{ entry.name }}</td>
+    <td>{{ entry.age }}</td>
+    <td>{{ entry.wage }}</td>
+  </tr>
+  {% endfor %}
+</table>
+
+<!-- ✅ Logout Button -->
+<a href="http://localhost:5001/auth/logout"><button>Logout</button></a>
+
 {% endblock %}

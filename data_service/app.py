@@ -1,43 +1,34 @@
-from flask import Flask, request, render_template, redirect, jsonify
+from flask import Flask, request, render_template, redirect, url_for, jsonify
 import jwt
-import time
-from jwt.exceptions import DecodeError, ExpiredSignatureError  # ✅ Import correct exceptions
-from database.db import get_db_connection
+import os
+from database.db import get_db_connection, analytics_collection
 from config import Config
 
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# Middleware: JWT Authentication
+# ✅ Middleware: JWT Authentication
 def authenticate(f):
     def wrapper(*args, **kwargs):
         token = request.cookies.get("auth_token")
         if not token:
             return redirect("http://localhost:5001/login")  # Redirect to auth_service login
-        
         try:
-            decoded_token = jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"], options={"verify_exp": False})
-            exp = decoded_token.get("exp", 0)
-            current_time = int(time.time())
-
-            if current_time > exp:  # Token is expired
-                return redirect("http://localhost:5001/login")
-
-        except (DecodeError, ExpiredSignatureError):  # ✅ Catch both decode and expiration errors
+            jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
+        except Exception:
             return redirect("http://localhost:5001/login")
-
         return f(*args, **kwargs)
-
     wrapper.__name__ = f.__name__
     return wrapper
 
-# Serve the Data Form (Default Page)
+# ✅ Serve the Data Form (Default Page)
 @app.route("/")
 @authenticate
 def data_form():
-    return render_template("data_form.html")
+    entries = list(analytics_collection.find({}, {"_id": 0}))  # Get logs from MongoDB
+    return render_template("data_form.html", entries=entries)
 
-# Save Data to MySQL
+# ✅ Save Data to MySQL and Log to MongoDB
 @app.route("/save-data", methods=["POST"])
 @authenticate
 def save_data():
@@ -55,7 +46,11 @@ def save_data():
         conn.commit()
         cursor.close()
         conn.close()
-        return render_template("data_form.html", message="Data Saved Successfully!")
+
+        # ✅ Log entry in MongoDB
+        analytics_collection.insert_one({"name": name, "age": age, "wage": wage})
+
+        return redirect(url_for("data_form"))
     except Exception as e:
         return jsonify({"message": "Database error", "error": str(e)}), 500
 
