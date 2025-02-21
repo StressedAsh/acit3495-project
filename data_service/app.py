@@ -7,12 +7,11 @@ from config import Config
 app = Flask(__name__)
 app.config.from_object(Config)
 
-# ✅ Middleware: JWT Authentication
 def authenticate(f):
     def wrapper(*args, **kwargs):
         token = request.cookies.get("auth_token")
         if not token:
-            return redirect("http://localhost:5001/login")  # Redirect to auth_service login
+            return redirect("http://localhost:5001/login")
         try:
             jwt.decode(token, Config.SECRET_KEY, algorithms=["HS256"])
         except Exception:
@@ -21,14 +20,12 @@ def authenticate(f):
     wrapper.__name__ = f.__name__
     return wrapper
 
-# ✅ Serve the Data Form (Default Page)
 @app.route("/")
 @authenticate
 def data_form():
-    entries = list(analytics_collection.find({}, {"_id": 0}))  # Get logs from MongoDB
+    entries = list(analytics_collection.find({}, {"_id": 0}))
     return render_template("data_form.html", entries=entries)
 
-# ✅ Save Data to MySQL and Log to MongoDB
 @app.route("/save-data", methods=["POST"])
 @authenticate
 def save_data():
@@ -47,7 +44,6 @@ def save_data():
         cursor.close()
         conn.close()
 
-        # ✅ Log entry in MongoDB
         analytics_collection.insert_one({"name": name, "age": age, "wage": wage})
 
         return redirect(url_for("data_form"))
