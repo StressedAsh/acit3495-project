@@ -1,0 +1,92 @@
+# Node.js dependencies
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# Python dependencies
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.env
+*.env
+
+# Logs & Debugging
+logs/
+*.log
+debug.log
+
+# Database files
+database/
+*.sqlite3
+*.db
+
+# Docker
+docker-compose.override.yml
+*.pid
+
+# Ignore compiled or temporary files
+dist/
+build/
+.DS_Store
+*.swp
+*.swo
+
+# Virtual environment for Python
+venv/
+.venv/
+
+# Ignore any .env files (sensitive credentials)
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
+
+# Ignore IDE-specific files
+.vscode/
+.idea/
+*.iml
+
+# Ignore test coverage files
+coverage/
+*.cover
+*.py,cover
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+pytest_cache/
+junit.xml
+
+# Ignore results of npm or yarn tests
+.nyc_output/
+coverage/
+
+# Ignore temporary files
+tmp/
+temp/
+*.tmp
+*.bak
+
+# Ignore Flask session and cache
+instance/
+.cache/
+
+# Ignore MySQL dumps (if any)
+*.sql
+
+# Ignore MongoDB dumps (if any)
+dump/
+mongod.lock
+
+# Ignore compiled TypeScript files (if used)
+*.tsbuildinfo
+
+# Ignore specific auth tokens or API keys (if accidentally created)
+auth.json
+firebase.json
+config.js
