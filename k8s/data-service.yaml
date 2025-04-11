@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: data-service
-          image: your-dockerhub-username/data_service:latest
+          image: thatstressedguy/data_service:latest
           ports:
             - containerPort: 5002
           env:

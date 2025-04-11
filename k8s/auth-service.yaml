@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
         - name: auth-service
-          image: your-dockerhub-username/auth_service:latest
+          image: thatstressedguy/auth_service:latest
           ports:
             - containerPort: 5001
           env:
